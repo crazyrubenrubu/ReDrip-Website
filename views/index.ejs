@@ -49,6 +49,22 @@
         .product-card {
             flex-grow: 1; /* Make cards in a row equal height */
         }
+
+        /* Scroll Animation Styles */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Search Overlay Transition */
+        #search-overlay {
+            transition: opacity 0.3s ease-in-out;
+        }
     </style>
     <script>
         // Custom Tailwind CSS configuration
@@ -69,8 +85,21 @@
 </head>
 <body class="bg-dark-bg text-white">
 
+    <!-- Search Overlay -->
+    <div id="search-overlay" class="fixed inset-0 bg-dark-bg/80 backdrop-blur-sm z-50 hidden flex items-start justify-center pt-20 md:pt-32 opacity-0">
+        <div class="relative w-full max-w-xl px-4">
+            <!-- Search Input -->
+            <input type="text" id="search-input" placeholder="Search for products..." class="w-full bg-light-bg border-2 border-primary text-white text-lg rounded-lg p-4 pr-12 focus:outline-none focus:ring-2 focus:ring-primary-hover">
+            
+            <!-- Close Button -->
+            <button id="close-search-btn" class="absolute top-1/2 right-4 transform -translate-y-1/2 text-light-text hover:text-white p-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+    </div>
+
     <!-- Header & Navigation -->
-    <header class="bg-light-bg/80 backdrop-blur-sm sticky top-0 z-50">
+    <header class="bg-light-bg/80 backdrop-blur-sm sticky top-0 z-40">
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <!-- Logo -->
@@ -80,14 +109,75 @@
                     </a>
                 </div>
 
-                <!-- Desktop Navigation -->
-                <div class="hidden md:block">
+                <!-- Desktop Navigation with Dropdowns -->
+                <div class="hidden md:flex items-center justify-center flex-1">
                     <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Sneakers</a>
-                        <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Men</a>
-                        <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Women</a>
-                        <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Accessories</a>
-                        <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Jewelry</a>
+                        <!-- Women Menu -->
+                        <div class="group relative">
+                            <button class="text-gray-300 group-hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                                <span>Women</span>
+                                <svg class="w-4 h-4 ml-1 transform group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="absolute left-0 mt-2 w-48 bg-light-bg rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 -translate-y-4">
+                                <div class="py-1">
+                                    <a href="#" class="block px-4 py-2 text-sm text-light-text hover:bg-gray-700 hover:text-white">Dresses</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-light-text hover:bg-gray-700 hover:text-white">Tops & Tees</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-light-text hover:bg-gray-700 hover:text-white">Kurtas & Kurtis</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-light-text hover:bg-gray-700 hover:text-white">Sarees</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-light-text hover:bg-gray-700 hover:text-white">Jeans & Jeggings</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Men Menu -->
+                        <div class="group relative">
+                            <button class="text-gray-300 group-hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                                <span>Men</span>
+                                <svg class="w-4 h-4 ml-1 transform group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="absolute left-0 mt-2 w-48 bg-light-bg rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 -translate-y-4">
+                                <div class="py-1">
+                                    <a href="#" class="block px-4 py-2 text-sm text-light-text hover:bg-gray-700 hover:text-white">T-Shirts</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-light-text hover:bg-gray-700 hover:text-white">Shirts</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-light-text hover:bg-gray-700 hover:text-white">Jeans</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-light-text hover:bg-gray-700 hover:text-white">Trousers</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-light-text hover:bg-gray-700 hover:text-white">Shorts</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Children Menu -->
+                        <div class="group relative">
+                            <button class="text-gray-300 group-hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                                <span>Children</span>
+                                <svg class="w-4 h-4 ml-1 transform group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="absolute left-0 mt-2 w-48 bg-light-bg rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 -translate-y-4">
+                                <div class="py-1">
+                                    <a href="#" class="block px-4 py-2 text-sm text-light-text hover:bg-gray-700 hover:text-white">Boys' Clothing</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-light-text hover:bg-gray-700 hover:text-white">Girls' Clothing</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-light-text hover:bg-gray-700 hover:text-white">Infant Wear</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-light-text hover:bg-gray-700 hover:text-white">Kids' Footwear</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Accessories Menu -->
+                        <div class="group relative">
+                            <button class="text-gray-300 group-hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                                <span>Accessories</span>
+                                <svg class="w-4 h-4 ml-1 transform group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="absolute left-0 mt-2 w-48 bg-light-bg rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 -translate-y-4">
+                                <div class="py-1">
+                                    <a href="#" class="block px-4 py-2 text-sm text-light-text hover:bg-gray-700 hover:text-white">Watches</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-light-text hover:bg-gray-700 hover:text-white">Jewelry</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-light-text hover:bg-gray-700 hover:text-white">Bags & Backpacks</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-light-text hover:bg-gray-700 hover:text-white">Sunglasses</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-light-text hover:bg-gray-700 hover:text-white">Hats & Caps</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -120,11 +210,10 @@
         <!-- Mobile menu -->
         <div class="md:hidden hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Sneakers</a>
-                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Men</a>
                 <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Women</a>
+                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Men</a>
+                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Children</a>
                 <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Accessories</a>
-                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Jewelry</a>
             </div>
              <div class="pt-4 pb-3 border-t border-gray-700">
                 <div class="flex items-center justify-center px-5 space-x-8">
@@ -149,7 +238,7 @@
         </section>
 
         <!-- New Arrivals Slideshow -->
-        <section class="py-16 sm:py-24 overflow-hidden">
+        <section class="py-16 sm:py-24 overflow-hidden animate-on-scroll">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-8">New Arrivals</h2>
                 <div class="swiper new-arrivals-swiper">
@@ -171,7 +260,7 @@
         </section>
 
         <!-- Trending Sneakers Slideshow -->
-        <section class="py-16 sm:py-24 bg-light-bg overflow-hidden">
+        <section class="py-16 sm:py-24 bg-light-bg overflow-hidden animate-on-scroll">
              <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-8">Trending Sneakers</h2>
                 <div class="swiper trending-sneakers-swiper relative">
@@ -192,7 +281,7 @@
         </section>
 
         <!-- Top Accessories Slideshow -->
-        <section class="py-16 sm:py-24 overflow-hidden">
+        <section class="py-16 sm:py-24 overflow-hidden animate-on-scroll">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-8">Top Accessories</h2>
                 <div class="swiper accessories-swiper">
@@ -214,7 +303,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-light-bg border-t border-gray-700">
+    <footer class="bg-light-bg border-t border-gray-700 animate-on-scroll">
         <div class="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div class="space-y-4"><h4 class="text-lg font-bold text-white">Shop</h4><ul class="space-y-2"><li><a href="#" class="text-light-text hover:text-primary">Sneakers</a></li><li><a href="#" class="text-light-text hover:text-primary">Apparel</a></li><li><a href="#" class="text-light-text hover:text-primary">Accessories</a></li></ul></div>
@@ -244,7 +333,6 @@
 
         // --- Button Click Handlers ---
         const handleButtonClick = (buttonName) => console.log(`${buttonName} button clicked!`);
-        document.querySelectorAll('.js-search-btn').forEach(b => b.addEventListener('click', () => handleButtonClick('Search')));
         document.querySelectorAll('.js-user-btn').forEach(b => b.addEventListener('click', () => handleButtonClick('User Account')));
         document.querySelectorAll('.js-cart-btn').forEach(b => b.addEventListener('click', () => handleButtonClick('Shopping Cart')));
         const shopNowButton = document.getElementById('shop-now-btn');
@@ -256,9 +344,9 @@
         }
 
         // --- Swiper Initialization ---
-        // This script initializes the product slideshows.
+        const swiperInstances = [];
         const swiperOptions = {
-            loop: true,
+            loop: false, // Loop is disabled for accurate search filtering
             grabCursor: true,
             slidesPerView: 1,
             spaceBetween: 20,
@@ -268,32 +356,70 @@
                 1024: { slidesPerView: 4, spaceBetween: 30 },
             }
         };
+        swiperInstances.push(new Swiper('.new-arrivals-swiper', { ...swiperOptions, pagination: { el: '.new-arrivals-swiper .swiper-pagination', clickable: true } }));
+        swiperInstances.push(new Swiper('.trending-sneakers-swiper', { ...swiperOptions, navigation: { nextEl: '.trending-sneakers-swiper .swiper-button-next', prevEl: '.trending-sneakers-swiper .swiper-button-prev' } }));
+        swiperInstances.push(new Swiper('.accessories-swiper', { ...swiperOptions, pagination: { el: '.accessories-swiper .swiper-pagination', clickable: true } }));
 
-        // Initialize New Arrivals Swiper
-        new Swiper('.new-arrivals-swiper', {
-            ...swiperOptions,
-            pagination: {
-                el: '.new-arrivals-swiper .swiper-pagination',
-                clickable: true,
-            },
+        // --- Scroll Animation Logic ---
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    scrollObserver.unobserve(entry.target);
+                }
+            });
+        }, { rootMargin: '0px 0px -50px 0px' });
+        const elementsToAnimate = document.querySelectorAll('.animate-on-scroll');
+        elementsToAnimate.forEach(element => scrollObserver.observe(element));
+
+        // --- Search Functionality ---
+        const searchOverlay = document.getElementById('search-overlay');
+        const searchInput = document.getElementById('search-input');
+        const openSearchButtons = document.querySelectorAll('.js-search-btn');
+        const closeSearchButton = document.getElementById('close-search-btn');
+
+        const openSearch = () => {
+            searchOverlay.classList.remove('hidden');
+            setTimeout(() => searchOverlay.classList.remove('opacity-0'), 10); // For transition
+            document.body.style.overflow = 'hidden';
+            searchInput.focus();
+        };
+
+        const closeSearch = () => {
+            searchOverlay.classList.add('opacity-0');
+            setTimeout(() => {
+                searchOverlay.classList.add('hidden');
+                document.body.style.overflow = '';
+                searchInput.value = '';
+                searchInput.dispatchEvent(new Event('input'));
+            }, 300); // Match transition duration
+        };
+
+        openSearchButtons.forEach(btn => btn.addEventListener('click', openSearch));
+        closeSearchButton.addEventListener('click', closeSearch);
+        searchOverlay.addEventListener('click', (e) => {
+            if (e.target === searchOverlay) closeSearch();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !searchOverlay.classList.contains('hidden')) closeSearch();
         });
 
-        // Initialize Trending Sneakers Swiper
-        new Swiper('.trending-sneakers-swiper', {
-            ...swiperOptions,
-            navigation: {
-                nextEl: '.trending-sneakers-swiper .swiper-button-next',
-                prevEl: '.trending-sneakers-swiper .swiper-button-prev',
-            },
-        });
-
-        // Initialize Accessories Swiper
-        new Swiper('.accessories-swiper', {
-            ...swiperOptions,
-            pagination: {
-                el: '.accessories-swiper .swiper-pagination',
-                clickable: true,
-            },
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll('.product-card').forEach(card => {
+                const productName = card.querySelector('p.font-semibold').textContent.toLowerCase();
+                const slide = card.closest('.swiper-slide');
+                if (productName.includes(searchTerm)) {
+                    slide.style.display = 'flex';
+                } else {
+                    slide.style.display = 'none';
+                }
+            });
+            // Update all swiper instances to recalculate slides
+            swiperInstances.forEach(swiper => {
+                swiper.update();
+                swiper.slideTo(0, 0); // Go to first slide after search
+            });
         });
 
     </script>
